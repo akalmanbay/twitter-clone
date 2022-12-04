@@ -12,6 +12,7 @@ class App extends React.Component {
     this.state = {
       count: 0,
       content: '',
+      searchContent: '',
       tweets: [
         {
           id: 0,
@@ -82,13 +83,20 @@ class App extends React.Component {
           topic: 'education'
         }
       ],
-      searchedTweets: []
+      searchedTweets: ""
     }
   }
 
   onChangeTextInput = (e) => {
     this.setState({
       content: e.target.value
+    })
+  }
+
+  onChangeSearchInput = (e) => {
+    this.setState({
+      searchContent: e.target.value,
+      searchedTweets: this.state.tweets.filter(item => item.content.toLowerCase().includes(e.target.value.toLowerCase())),
     })
   }
 
@@ -118,26 +126,19 @@ class App extends React.Component {
     })
   }
 
-  searchTweetsByText = (text) => {
-    this.setState({
-      searchedTweets: this.state.tweets.filter(item => item.includes(text))
-    })
-  }
 
-  filterTweetsByTopic = (topic) => {
-    console.log('filter', topic)
-    this.setState({
-      filteredTweets: this.state.tweets.filter(item => item.topic === topic)
-    })
-  }
+
   render() {
     return (
       <div className="App d-flex flex-row" >
         <SideMenu />
         <div className='vertical-divider'></div>
-        <Home state={this.state} />
+        <Home state={this.state} deleteTweet={this.deleteTweet}
+          onChangeTextInput={this.onChangeTextInput}
+          addToTweets={this.addToTweets}
+        />
         <div className='vertical-divider'></div>
-        <RightBlock />
+        <RightBlock state={this.state} searchTweetsByText={this.searchTweetsByText} onChangeSearchInput={this.onChangeSearchInput} />
       </div>
     );
   }
